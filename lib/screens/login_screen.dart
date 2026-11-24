@@ -2,10 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gdg_test/core/widget/custom_bottom.dart';
 import 'package:gdg_test/core/widget/text_filed_section.dart';
+import 'package:gdg_test/screens/sign_up_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
 
+GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+class _LoginScreenState extends State<LoginScreen> {
+  bool? rememberMe = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,82 +87,132 @@ class LoginScreen extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 26),
-                  child: Column(
-                    spacing: 15,
-                    children: [
-                      SizedBox(),
-                      TextFeildSection(
-                        hintText: 'example@gmail.com',
-                        textFieldName: 'Email',
-                      ),
-                      TextFeildSection(
-                        hintText: '***************',
-                        textFieldName: 'PASSWORD',
-                        privacy: true,
-                        isSuffixIcon: true,
-                      ),
-                      Row(
-                        children: [
-                          Checkbox(value: false, onChanged: (value) {}),
-                          Text(
-                            'Remember me',
-                            style: TextStyle(fontSize: 16, fontWeight: .w400),
-                          ),
-                          Spacer(),
-                          Text(
-                            'Forgot Password',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: .w400,
-                              color: Color(0xffFF7622),
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      spacing: 15,
+                      children: [
+                        SizedBox(),
+                        TextFeildSection(
+                          obscureText: false,
+                          validator: (value) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !value.contains('@')) {
+                              return "please Enter VAILD EMAIL ";
+                            }
+                            return null;
+                          },
+
+                          hintText: 'example@gmail.com',
+                          textFieldName: 'Email',
+                        ),
+                        TextFeildSection(
+                          validator: (value) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                value.length < 7) {
+                              return "please Enter VAILD password ";
+                            }
+                            return null;
+                          },
+                          hintText: '***************',
+                          textFieldName: 'PASSWORD',
+                          isSuffixIcon: true,
+                        ),
+                        Row(
+                          children: [
+                            Checkbox(
+                              value: rememberMe,
+                              onChanged: (value) {
+                                setState(() {
+                                  rememberMe = value;
+                                });
+                              },
                             ),
+                            Text(
+                              'Remember me',
+                              style: TextStyle(fontSize: 16, fontWeight: .w400),
+                            ),
+                            Spacer(),
+                            Text(
+                              'Forgot Password',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: .w400,
+                                color: Color(0xffFF7622),
+                              ),
+                            ),
+                          ],
+                        ),
+                        CustomBottom(
+                          customBottomText: 'LOG IN ',
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SignUpScreen(),
+                                ),
+                              );
+                            } else {
+                              print('not vaild');
+                            }
+                          },
+                        ),
+                        SizedBox(height: 20),
+                        RichText(
+                          text: TextSpan(
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: .w400,
+                              color: Colors.black,
+                            ),
+                            children: [
+                              TextSpan(text: "Don't have an account?   "),
+                              TextSpan(
+                                text: "SIGN UP\n",
+                                style: TextStyle(color: Color(0xffFF7622)),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      CustomBottom(customBottomText: 'LOG IN '),
-                      SizedBox(height: 20),
-                      RichText(
-                        text: TextSpan(
+                        ),
+                        Text(
+                          'Or',
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: .w400,
                             color: Colors.black,
                           ),
+                        ),
+                        Row(
+                          mainAxisAlignment: .spaceEvenly,
                           children: [
-                            TextSpan(text: "Don't have an account?   "),
-                            TextSpan(
-                              text: "SIGN UP\n",
-                              style: TextStyle(color: Color(0xffFF7622)),
+                            GestureDetector(
+                              onTap: () {},
+                              child: CircleAvatar(
+                                radius: 30,
+                                child: Image.asset('assets/google.png'),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {},
+                              child: CircleAvatar(
+                                radius: 30,
+                                child: Image.asset('assets/facebook.png'),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {},
+                              child: CircleAvatar(
+                                radius: 30,
+                                child: Image.asset('assets/linkedin.png'),
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                      Text(
-                        'Or',
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: .w400,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: .spaceEvenly,
-                        children: [
-                          CircleAvatar(
-                            radius: 30,
-                            child: Image.asset('assets/google.png'),
-                          ),
-                          CircleAvatar(
-                            radius: 30,
-                            child: Image.asset('assets/facebook.png'),
-                          ),
-                          CircleAvatar(
-                            radius: 30,
-                            child: Image.asset('assets/linkedin.png'),
-                          ),
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

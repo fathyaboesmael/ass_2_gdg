@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
 class CustomBottom extends StatelessWidget {
-  const CustomBottom({super.key, required this.customBottomText});
+  const CustomBottom({
+    super.key,
+    required this.customBottomText,
+    required this.onPressed,
+  });
   final String customBottomText;
-
+  final void Function()? onPressed;
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -15,7 +19,7 @@ class CustomBottom extends StatelessWidget {
         ),
       ),
 
-      onPressed: () {},
+      onPressed: onPressed,
       child: Text(
         customBottomText,
         style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: .bold),

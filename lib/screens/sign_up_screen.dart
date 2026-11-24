@@ -3,9 +3,16 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gdg_test/core/widget/custom_bottom.dart';
 import 'package:gdg_test/core/widget/text_filed_section.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +43,9 @@ class SignUpScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                         icon: Icon(Icons.arrow_back_ios),
                       ),
                     ),
@@ -85,6 +94,7 @@ class SignUpScreen extends StatelessWidget {
               top: 270,
               right: 0,
               left: 0,
+              bottom: 15,
               child: Container(
                 width: .infinity,
                 height: 600,
@@ -98,33 +108,73 @@ class SignUpScreen extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 26),
-                  child: Column(
-                    spacing: 20,
-                    children: [
-                      SizedBox(),
-                      TextFeildSection(
-                        hintText: 'fathy ahmed',
-                        textFieldName: 'Name',
-                      ),
-                      TextFeildSection(
-                        hintText: 'example@gmail.com',
-                        textFieldName: 'Email',
-                      ),
-                      TextFeildSection(
-                        hintText: '***************',
-                        textFieldName: 'PASSWORD',
-                        privacy: true,
-                        isSuffixIcon: true,
-                      ),
-                      TextFeildSection(
-                        hintText: '***************',
-                        textFieldName: 'RE-TYPE PASSWORD',
-                        privacy: true,
-                        isSuffixIcon: true,
-                      ),
-                      Spacer(),
-                      CustomBottom(customBottomText: 'SIGN UP'),
-                    ],
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      spacing: 20,
+                      children: [
+                        SizedBox(),
+                        TextFeildSection(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "please Enter your name ";
+                            }
+                            return null;
+                          },
+                          hintText: 'fathy ahmed',
+                          textFieldName: 'Name',
+                        ),
+                        TextFeildSection(
+                          validator: (value) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !value.contains('@')) {
+                              return "please Enter VAILD EMAIL ";
+                            }
+                            return null;
+                          },
+                          hintText: 'example@gmail.com',
+                          textFieldName: 'Email',
+                        ),
+                        TextFeildSection(
+                          validator: (value) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                value.length < 7) {
+                              return "please Enter VAILD password ";
+                            }
+                            return null;
+                          },
+                          hintText: '***************',
+                          textFieldName: 'PASSWORD',
+                          isSuffixIcon: true,
+                        ),
+                        TextFeildSection(
+                          validator: (value) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                value.length < 7) {
+                              return "please Enter VAILD password ";
+                            }
+                            return null;
+                          },
+                          hintText: '***************',
+                          textFieldName: 'RE-TYPE PASSWORD',
+                          isSuffixIcon: true,
+                        ),
+                        Spacer(),
+                        CustomBottom(
+                          customBottomText: 'SIGN UP',
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              Navigator.pop(context);
+                            } else {
+                              print('not vaild');
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

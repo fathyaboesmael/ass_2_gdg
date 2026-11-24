@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
 
-class TextFeildSection extends StatelessWidget {
+class TextFeildSection extends StatefulWidget {
   const TextFeildSection({
     super.key,
     required this.hintText,
     required this.textFieldName,
-    this.privacy,
     this.isSuffixIcon,
+    this.validator,
+    this.obscureText,
   });
   final String hintText;
   final String textFieldName;
-  final bool? privacy;
-  final bool? isSuffixIcon;
+  final bool? obscureText;
 
+  final bool? isSuffixIcon;
+  final String? Function(String?)? validator;
+
+  @override
+  State<TextFeildSection> createState() => _TextFeildSectionState();
+}
+
+class _TextFeildSectionState extends State<TextFeildSection> {
+  bool vasbilty = true;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -20,10 +29,10 @@ class TextFeildSection extends StatelessWidget {
       crossAxisAlignment: .start,
       children: [
         Text(
-          textFieldName,
+          widget.textFieldName,
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: 15,
             fontWeight: .w400,
           ),
         ),
@@ -33,18 +42,29 @@ class TextFeildSection extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
 
-          child: TextField(
+          child: TextFormField(
+            validator: widget.validator,
+
             decoration: InputDecoration(
-              suffixIcon: isSuffixIcon == true
-                  ? Icon(Icons.remove_red_eye)
+              suffixIcon: widget.isSuffixIcon == true
+                  ? IconButton(
+                      onPressed: () {
+                        setState(() {
+                          vasbilty = !vasbilty;
+                        });
+                      },
+                      icon: vasbilty
+                          ? Icon(Icons.visibility_off)
+                          : Icon(Icons.remove_red_eye),
+                    )
                   : null,
               border: OutlineInputBorder(borderSide: BorderSide.none),
               hint: Text(
-                hintText,
+                widget.hintText,
                 style: TextStyle(fontWeight: .w300, fontSize: 15),
               ),
             ),
-            obscureText: privacy ?? false,
+            obscureText: widget.isSuffixIcon == true ? vasbilty : false,
           ),
         ),
       ],
